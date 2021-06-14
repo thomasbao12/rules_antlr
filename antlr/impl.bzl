@@ -1,6 +1,6 @@
 """The common ANTLR rule implementation."""
 
-load(":lang.bzl", "C", "CPP", "GO", "OBJC", "PYTHON", "PYTHON2", "PYTHON3")
+load(":lang.bzl", "C", "CPP", "GO", "OBJC", "PYTHON", "PYTHON2", "PYTHON3", "JAVA")
 
 AntlrInfo = provider(
     fields = {
@@ -32,7 +32,8 @@ def antlr(version, ctx, args):
     sources = []
     headers = []
     cc = ctx.attr.language == CPP or ctx.attr.language == C or ctx.attr.language == OBJC
-    output_type = "dir" if ctx.attr.language and ctx.attr.language != "Java" else "srcjar"
+    output_type = "dir" # srcjar is not deterministic since it includes modified timestamps
+    # output_type = "dir" if ctx.attr.language and ctx.attr.language != "Java" else "srcjar"
 
     if output_type == "srcjar":
         # the Java rules are special in that the output is a .jar file
@@ -110,6 +111,8 @@ def extension(language):
         return ".objc"
     if language == PYTHON or language == PYTHON2 or language == PYTHON3:
         return ".py"
+    if language == JAVA:
+        return ".java"
     return ""
 
 def lib_dir(imports):
