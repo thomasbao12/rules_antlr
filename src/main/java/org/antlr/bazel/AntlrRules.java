@@ -1,5 +1,6 @@
 package org.antlr.bazel;
 
+import com.google.devtools.build.buildjar.jarhelper.JarCreator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
@@ -312,57 +313,13 @@ public class AntlrRules
 
             case SRCJAR:
             {
-                URI uri = URI.create("jar:file:" + srcjar.toUri().getPath());
-                Map<String, String> env = new HashMap<>();
-                env.put("create", "true");
-
-                try (FileSystem archive = FileSystems.newFileSystem(uri, env))
-                {
-                    Path root = archive.getPath("/");
-
-                    Files.walkFileTree(outputDirectory, new SimpleFileVisitor<Path>()
-                        {
-                            @Override
-                            public FileVisitResult visitFile(Path file, BasicFileAttributes attr)
-                                throws IOException
-                            {
-                                String filename = file.getFileName().toString();
-
-                                if (filename.endsWith(".srcjar"))
-                                {
-                                    return CONTINUE;
-                                }
-
-                                if (filename.startsWith("expanded"))
-                                {
-                                    return CONTINUE;
-                                }
-
-                                Path target = root.resolve(
-                                    outputDirectory.relativize(file).toString());
-
-                                if (!filename.endsWith(".log"))
-                                {
-                                    Grammar grammar = findGrammar(file, names);
-
-                                    // indicates imported file that does not belong in the .srcjar
-                                    if (grammar == null)
-                                    {
-                                        return CONTINUE;
-                                    }
-
-                                    // source files should be stored below their corresponding
-                                    // package/namespace
-                                    target = root.resolve(grammar.getNamespacePath().toString())
-                                        .resolve(target.getFileName());
-                                }
-
-                                Files.createDirectories(target.getParent());
-                                Files.copy(file, target, COPY_OPTIONS);
-
-                                return CONTINUE;
-                            }
-                        });
+                JarCreator jar = new JarCreator(srcjar.toUri().getPath());
+                try {
+                  jar.setNormalize(true);
+                  jar.setCompression(true);
+                  jar.addDirectory(outputDirectory);
+                } finally {
+                  jar.execute();
                 }
                 break;
             }

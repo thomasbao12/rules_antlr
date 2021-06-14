@@ -28,7 +28,7 @@ java_library(
     ],
     deps = [
         ":support",
-        "//src/main/java/org/antlr/bazel",
+        "//src/main/java/org/antlr/bazel:bazel_lib",
         "//src/test/java/org/antlr/bazel:tests",
         "@antlr2//jar",
         "@guava//jar",
@@ -57,7 +57,7 @@ java_library(
     ],
     deps = [
         ":support",
-        "//src/main/java/org/antlr/bazel",
+        "//src/main/java/org/antlr/bazel:bazel_lib",
         "//src/test/java/org/antlr/bazel:tests",
         "@antlr3_runtime//jar",
         "@antlr3_tool//jar",
@@ -88,7 +88,7 @@ java_library(
     ],
     deps = [
         ":support",
-        "//src/main/java/org/antlr/bazel",
+        "//src/main/java/org/antlr/bazel:bazel_lib",
         "//src/test/java/org/antlr/bazel:tests",
         "@antlr3_runtime//jar",
         "@antlr4_runtime//jar",
@@ -122,7 +122,7 @@ java_library(
     ],
     deps = [
         ":support",
-        "//src/main/java/org/antlr/bazel",
+        "//src/main/java/org/antlr/bazel:bazel_lib",
         "//src/test/java/org/antlr/bazel:tests",
         "@antlr2//jar",
         "@guava//jar",
