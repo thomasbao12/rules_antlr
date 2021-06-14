@@ -32,7 +32,8 @@ def antlr(version, ctx, args):
     sources = []
     headers = []
     cc = ctx.attr.language == CPP or ctx.attr.language == C or ctx.attr.language == OBJC
-    output_type = "dir" if ctx.attr.language and ctx.attr.language != "Java" else "srcjar"
+    output_type = "dir" # srcjar is not deterministic since it includes modified timestamps
+    # output_type = "dir" if ctx.attr.language and ctx.attr.language != "Java" else "srcjar"
 
     if output_type == "srcjar":
         # the Java rules are special in that the output is a .jar file
